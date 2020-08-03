@@ -1,4 +1,4 @@
-import math
+# import math
 from dll_node import DLL_Node
 
 
@@ -11,45 +11,72 @@ class DoublyLinkedList:
     def __len__(self):
         return self.length
     
-    def merge(self, first, second):
-        if first is None:
-            return second
-        if second is None:
-            return first
-        if first.value < second.value: 
-            first.next = self.merge(first.next, second) 
-            first.next.prev = first 
-            first.prev = None   
-            return first 
-        else: 
-            second.next = self.merge(first, second.next) 
-            second.next.prev = second 
-            second.prev = None
-            return second
+    """
+    For a MergeSort we will need three functions:
+    merge(), merge_sort(), and split()
     
-    def merge_sort(self, head): 
-        if head is None:  
+    merge() should:
+    - if only one list is received, return it as is
+    - if both lists are received, compare the value of each head
+        recursively merge in order
+    merge_sort() should:
+    - if unable to split the list due to size return the list
+    - create pointer to second half and sever the connection to first half
+    - recursively continue to split until we have single item "lists"
+    - as the splitting terminates, begin to re-form the connections
+    split() should:
+    - initiate pointers
+    - find last node of the first half of linked list
+    - create pointer to the start of the second half of linked list
+    - cut off second half of linked list
+    - return second half's head
+    """
+    
+    def merge(self, first_half, second_half):
+        if first_half is None:
+            return second_half
+        if second_half is None:
+            return first_half
+        
+        if first_half.value < second_half.value: 
+            first_half.next = self.merge(first_half.next, second_half) 
+            first_half.next.prev = first_half 
+            first_half.prev = None   
+            return first_half 
+        else: 
+            second_half.next = self.merge(first_half, second_half.next) 
+            second_half.next.prev = second_half 
+            second_half.prev = None
+            return second_half
+    
+    def merge_sort(self, head):
+        if (head is None) or (head.next is None): 
             return head 
-        if head.next is None: 
-            return head 
-        second = self.split(head) 
+        split_head = self.split(head) 
         head = self.merge_sort(head) 
-        second = self.merge_sort(second) 
-        return self.merge(head, second) 
+        split_head = self.merge_sort(split_head)
+        return self.merge(head, split_head) 
     
     def split(self, head): 
-        fast = head
-        slow = head 
-        while(True): 
-            if fast.next is None: 
-                break
-            if fast.next.next is None: 
-                break
-            fast = fast.next.next 
-            slow = slow.next
-        temp = slow.next
-        slow.next = None
-        return temp 
+        fast_pointer = head
+        mid_pointer = head 
+        while (fast_pointer.next is not None) and (fast_pointer.next.next is not None): 
+            fast_pointer = fast_pointer.next.next 
+            mid_pointer = mid_pointer.next
+        split_head = mid_pointer.next
+        mid_pointer.next = None
+        return split_head
+    
+    """
+    For an Insertion Sort we will need one function:
+    sorted_insert()
+    
+    sorted_insert() should:
+    - instantiate a new node if none currently exists
+    - call add_to_head() if the value received is smaller than the current head
+    - iterate through list to find greatest value below new value for insertion point
+    - increase length of dll
+    """
     
     def sorted_insert(self, value):
         if self.length == 0:
@@ -88,111 +115,10 @@ class DoublyLinkedList:
             self.tail = self.tail.next
         self.length += 1
 
-    def remove_from_head(self):
-        if self.length == 0:
-            return None
-        else:
-            deleted_node_value = self.head.value
-            self.delete(self.head)
-            return deleted_node_value
-
-    def remove_from_tail(self):
-        if self.length == 0:
-            return None
-        else:
-            deleted_node_value = self.tail.value
-            self.delete(self.tail)
-            return deleted_node_value
-
-    def move_to_front(self, node):
-        self.delete(node)
-        self.add_to_head(node.value)
-
-    def move_to_end(self, node):
-        self.delete(node)
-        self.add_to_tail(node.value)
-
-    def delete(self, node):
-        if self.length == 0:
-            return None
-        else:
-            if self.length == 1:
-                self.head = None
-                self.tail = None
-            else:
-                if node == self.head:
-                    self.head = node.next
-                elif node == self.tail:
-                    self.tail = node.prev
-                node.delete()
-        self.length -= 1
-
-    def get_max(self):
-        left_pointer = self.head
-        right_pointer = self.tail
-        highest_value = self.head.value if self.head else None
-        if self.length != 0:
-            for _ in range(math.ceil(self.length/2)):
-                if highest_value < left_pointer.value:
-                    highest_value = left_pointer.value
-                if highest_value < right_pointer.value:
-                    highest_value = right_pointer.value
-                left_pointer = left_pointer.next
-                right_pointer = right_pointer.prev
-        return highest_value
-
-    def get_middle(self):
-        middle = self.head
-        end = self.head
-        while end.next != None and end.next.next != None:
-            end = end.next.next
-            middle = middle.next
-        if self.length % 2 == 0:
-            return [middle.value, middle.next.value]
-        else:
-            return [middle.value]
-
-    def get_list(self):
-        linked_list_values = []
-        current_node = self.head
-        while current_node is not None:
-            linked_list_values.append(current_node.value)
-            current_node = current_node.next
-        return linked_list_values
-
     def contains(self, value):
-        match_found = False
         current_node = self.head
         while current_node is not None:
             if current_node.value == value:
-                match_found = True
+                return True
             current_node = current_node.next
-        return match_found
-
-    def reverse(self):
-        iterator = self.head
-        current_node = self.head
-        while iterator is not None:
-            iterator = iterator.next
-            current_node.next = current_node.prev
-            current_node.prev = iterator
-            current_node = iterator
-        self.head = self.tail
-        self.tail = iterator
-
-
-# testing the list
-# myList = DoublyLinkedList()
-# myList.add_to_head(1)
-# myList.add_to_head(0)
-# myList.add_to_tail(2)
-# myList.add_to_tail(3)
-# myList.add_to_head(10)
-# myList.add_to_head(15)
-# myList.add_to_head(-1)
-# print(myList.get_list())
-# print(myList.get_max())
-# print(myList.get_middle())
-# print(myList.contains(10))
-# myList.reverse()
-# print(myList.get_list())
+        return False

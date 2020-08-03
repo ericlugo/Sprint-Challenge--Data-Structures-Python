@@ -1,5 +1,6 @@
 import time
 from doubly_linked_list import DoublyLinkedList
+from binary_search_tree import BSTNode
 
 start_time = time.time()
 
@@ -14,6 +15,7 @@ f.close()
 duplicates = []  # Return the list of duplicates in this data structure
 
 # Replace the nested for loops below with your improvements
+
 """
 ORIGINAL NESTED LOOPING RUNTIME: O(n^2) : 5.341 seconds ====================================
 """
@@ -21,8 +23,9 @@ ORIGINAL NESTED LOOPING RUNTIME: O(n^2) : 5.341 seconds ========================
 #     for name_2 in names_2:
 #         if name_1 == name_2:
 #             duplicates.append(name_1)
+
 """
-FIRST TRY INSERTION SORT RUNTIME: O(n^2) : 17.728 seconds ==================================
+1ST TRY INSERTION SORT RUNTIME: O(n^2) : 17.728 seconds ====================================
 """
 # sorted_dll = DoublyLinkedList()
 # for name in names_1:
@@ -36,8 +39,9 @@ FIRST TRY INSERTION SORT RUNTIME: O(n^2) : 17.728 seconds ======================
 #         duplicates.append(current_node.value)
 #     current_node = current_node.next
 #     previous_node = previous_node.next
+
 """
-SECOND TRY MERGE SORT RUNTIME: O(n log n) : <maximum recursion depth exceeded> =============
+2ND TRY MERGE SORT RUNTIME: O(n log n) : <maximum recursion depth exceeded> ================
 """
 # dll = DoublyLinkedList()
 # for name in names_1:
@@ -52,14 +56,16 @@ SECOND TRY MERGE SORT RUNTIME: O(n log n) : <maximum recursion depth exceeded> =
 #         duplicates.append(current_node.value)
 #     current_node = current_node.next
 #     previous_node = previous_node.next
+
 """
-NEW RUNTIME: O(n) : 1.020 seconds ==========================================================
+STRETCH RUNTIME: O(n) : 1.020 seconds ======================================================
 """
 # for name_1 in names_1:
 #     if name_1 in names_2:
 #         duplicates.append(name_1)
+
 """
-BEST RUNTIME: O(n log n) : 0.011 seconds ===================================================
+BEST STRETCH RUNTIME: O(n log n) : 0.011 seconds ===========================================
 
 NOTE: List.sort() is always o(n log n). However, this runs faster than the above solution
 because merging the lists effectively reduces the value of N by removing recursion.
@@ -69,6 +75,27 @@ names_1.sort()
 for i in range(1, len(names_1)):
     if names_1[i] == names_1[i-1]:
         duplicates.append(names_1[i])
+
+"""
+THIRD TRY DLL.CONTAINS RUNTINE: O(n) : 6.876 seconds =======================================
+"""
+# dll = DoublyLinkedList()
+# for name in names_1:
+#     dll.add_to_head(name)
+# for name in names_2:
+#     if dll.contains(name):
+#         duplicates.append(name)
+
+"""
+FOURTH TRY BST.CONTAINS RUNTIME: O(log n) : 0.093 seconds ==================================
+"""
+# bst = BSTNode(names_1[0])
+# for index in range(1, len(names_1)):
+#     bst.insert(names_1[index])
+# for name in names_2:
+#     if bst.contains(name):
+#         duplicates.append(name)
+
 
 end_time = time.time()
 print (f"{len(duplicates)} duplicates:\n\n{', '.join(duplicates)}\n\n")
