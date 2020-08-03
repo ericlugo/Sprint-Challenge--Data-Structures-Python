@@ -13,16 +13,16 @@ f.close()
 duplicates = []  # Return the list of duplicates in this data structure
 
 # Replace the nested for loops below with your improvements
-# ORIGINAL RUNTIME: 5.341 seconds ============================================================
+# ORIGINAL RUNTIME: O(n^2) : 5.341 seconds ===================================================
 # for name_1 in names_1:
 #     for name_2 in names_2:
 #         if name_1 == name_2:
 #             duplicates.append(name_1)
-# NEW RUNTIME: 1.020 seconds =================================================================
+# NEW RUNTIME: O(n) : 1.020 seconds ==========================================================
 # for name_1 in names_1:
 #     if name_1 in names_2:
 #         duplicates.append(name_1)
-# NEW RUNTIME: 0.011 seconds =================================================================
+# NEW RUNTIME: O(n log n) : 0.011 seconds ====================================================
 names_1.extend(names_2)
 names_1.sort()
 for i in range(1, len(names_1)):
