@@ -65,16 +65,16 @@ STRETCH RUNTIME: O(n) : 1.020 seconds ==========================================
 #         duplicates.append(name_1)
 
 """
-BEST STRETCH RUNTIME: O(n log n) : 0.011 seconds ===========================================
+STRETCH RUNTIME: O(n log n) : 0.011 seconds ================================================
 
 NOTE: List.sort() is always o(n log n). However, this runs faster than the above solution
 because merging the lists effectively reduces the value of N by removing recursion.
 """
-names_1.extend(names_2)
-names_1.sort()
-for i in range(1, len(names_1)):
-    if names_1[i] == names_1[i-1]:
-        duplicates.append(names_1[i])
+# names_1.extend(names_2)
+# names_1.sort()
+# for i in range(1, len(names_1)):
+#     if names_1[i] == names_1[i-1]:
+#         duplicates.append(names_1[i])
 
 """
 THIRD TRY DLL.CONTAINS RUNTINE: O(n) : 6.876 seconds =======================================
@@ -95,6 +95,11 @@ FOURTH TRY BST.CONTAINS RUNTIME: O(log n) : 0.093 seconds ======================
 # for name in names_2:
 #     if bst.contains(name):
 #         duplicates.append(name)
+
+"""
+BEST STRETCH RUNTIME: O(n) : 0.003 seconds =================================================
+"""
+duplicates = list(set(names_1).intersection(set(names_2)))
 
 
 end_time = time.time()
